@@ -1,10 +1,7 @@
 module Connection
-
-open Fable.Import
-open Fable.Core
-open Elmish
-
 module SignalR =
+    open Fable.Import
+    open Fable.Core
     type LogLevel =
     | Trace = 0
     | Debug = 1
@@ -24,31 +21,27 @@ module SignalR =
     [<Emit("new signalR.HubConnectionBuilder()")>]
     let MyConnectionBuilder() : IConnectionBuilder = jsNative    
 
+open Elmish
 open SignalR
+open Model
 open State
-
 /// Starts the SignalR Hub Connection and registers its handlers and orientation as an Elmish subscription.
 let hubConnection initial = 
     let sub dispatch =
         ///Handles Push Messages from the Server and dispatches them as Elmish messages.
         let onLiveOperatorMessage (msg:obj) =
-            match msg with
-            | :? ChatMessage -> 
-                (downcast msg : ChatMessage)
-                |> RemoteChatMessage
-                |> Service
-                |> dispatch
-            | _ ->
-                {sender = "No Sender"; text = "No Text"}
-                |> RemoteChatMessage
-                |> Service
-                |> dispatch
-        ///Establishes the SignalR Hub Connection
+            msg :?> ChatMessage
+            |> RemoteChatMessage
+            |> Service
+            |> dispatch
         let connection = 
             MyConnectionBuilder()
                 .withUrl("http://localhost:7071/api")
                 .configureLogging(LogLevel.Information)
                 .build()
-        connection.on("newMessage", onLiveOperatorMessage)
-        connection.start() |> ignore
+        do connection.on("newMessage", onLiveOperatorMessage)
+        // do (Cmd.OfPromise.perform connection.start () Connected) |> ignore
+        do connection.start() |> ignore
+        // let establishConnection () = connection.start()
+        // do (Cmd.OfPromise.perform establishConnection () Connected) |> ignore
     Cmd.ofSub sub
