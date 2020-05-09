@@ -1,4 +1,6 @@
+/// Manages live Service Connection
 module Connection
+/// Manages SignalR JS Client InterOp
 module SignalR =
     open Fable.Import
     open Fable.Core
@@ -20,12 +22,13 @@ module SignalR =
     [<ImportDefault("@microsoft/signalr")>]
     [<Emit("new signalR.HubConnectionBuilder()")>]
     let MyConnectionBuilder() : IConnectionBuilder = jsNative    
+/// Manages Elmish Subscription for live Connection messaging
 module Subscription =
     open Elmish
     open SignalR
     open Model
     open State
-    /// Starts the SignalR Hub Connection and registers its handlers and orientation as an Elmish subscription.
+    /// Starts the SignalR Hub Connection and registers its handlers and orientation as an Elmish Subscription.
     let hubConnection initial = 
         let sub dispatch =
             let dispatchConnected () = 
@@ -33,7 +36,7 @@ module Subscription =
                 |> Session
                 |> Service
                 |> dispatch
-            ///Handles Push Messages from the Server and dispatches them as Elmish messages.
+            ///Handles Push Messages from the Service and dispatches them as Elmish messages.
             let onHubMessage (msg:obj) =
                 msg :?> ChatMessage
                 |> ReceivedChatMessage

@@ -1,3 +1,4 @@
+/// Manages functional reactive View Rendering
 module View
 open Fable.React
 open Fable.React.Props

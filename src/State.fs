@@ -1,3 +1,4 @@
+/// Manages Model's State update behavior and associated messaging
 module State
 open Model
 
