@@ -9,7 +9,7 @@ const connection = new signalR.HubConnectionBuilder()
 
 function initConnection(){
     console.log('registering handlers...');
-    
+    connection.on('newMessage',newMessageHandler);
     connection.onclose(()=> console.log('disconnected'));
     console.log('connecting...');
     connection.start()
@@ -17,4 +17,8 @@ function initConnection(){
       .catch(console.error);
 }
 
-export {connected, initConnection}
+function newMessageHandler(message) {
+    console.log(message);
+}
+
+export {connected, initConnection, newMessageHandler}

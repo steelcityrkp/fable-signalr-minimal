@@ -3,6 +3,8 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Msg.fs" />
+    <Compile Include="SignalR.fs" />
     <Compile Include="Connection.fs" />
     <Compile Include="App.fs" />
   </ItemGroup>
