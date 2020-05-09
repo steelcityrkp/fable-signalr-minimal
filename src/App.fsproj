@@ -4,7 +4,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="State.fs" />
-    <Compile Include="SignalR.fs" />
     <Compile Include="Connection.fs" />
     <Compile Include="App.fs" />
   </ItemGroup>
