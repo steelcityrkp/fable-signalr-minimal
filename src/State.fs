@@ -2,7 +2,7 @@ module State
 open Model
 
 type ServiceRemoteMsg =
-| Connected of unit
+| Connected
 | RemoteChatMessage of ChatMessage
 type ClientBehaviorMsg =
 | Increment
@@ -13,7 +13,7 @@ type Msg =
 
 let init() : Model = {
     Connected = false
-    Messages = List.empty
+    ReceivedMessages = List.empty
     Counter = 0
 }
 let update (msg:Msg) (model:Model) =
@@ -24,5 +24,5 @@ let update (msg:Msg) (model:Model) =
       | Decrement -> {model with Counter = model.Counter - 1}
     | Service smsg ->
       match smsg with
-      | RemoteChatMessage rcm ->
-        model
+      | RemoteChatMessage rcm -> { model with ReceivedMessages = rcm :: model.ReceivedMessages }
+      | Connected -> {model with Connected = true}

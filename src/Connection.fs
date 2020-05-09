@@ -20,28 +20,32 @@ module SignalR =
     [<ImportDefault("@microsoft/signalr")>]
     [<Emit("new signalR.HubConnectionBuilder()")>]
     let MyConnectionBuilder() : IConnectionBuilder = jsNative    
-
-open Elmish
-open SignalR
-open Model
-open State
-/// Starts the SignalR Hub Connection and registers its handlers and orientation as an Elmish subscription.
-let hubConnection initial = 
-    let sub dispatch =
-        ///Handles Push Messages from the Server and dispatches them as Elmish messages.
-        let onLiveOperatorMessage (msg:obj) =
-            msg :?> ChatMessage
-            |> RemoteChatMessage
-            |> Service
-            |> dispatch
-        let connection = 
-            MyConnectionBuilder()
-                .withUrl("http://localhost:7071/api")
-                .configureLogging(LogLevel.Information)
-                .build()
-        do connection.on("newMessage", onLiveOperatorMessage)
-        // do (Cmd.OfPromise.perform connection.start () Connected) |> ignore
-        do connection.start() |> ignore
-        // let establishConnection () = connection.start()
-        // do (Cmd.OfPromise.perform establishConnection () Connected) |> ignore
-    Cmd.ofSub sub
+module Subscription =
+    open Elmish
+    open SignalR
+    open Model
+    open State
+    /// Starts the SignalR Hub Connection and registers its handlers and orientation as an Elmish subscription.
+    let hubConnection initial = 
+        let sub dispatch =
+            let dispatchConnected () = 
+                Connected 
+                |> Service 
+                |> dispatch
+            ///Handles Push Messages from the Server and dispatches them as Elmish messages.
+            let onHubMessage (msg:obj) =
+                msg :?> ChatMessage
+                |> RemoteChatMessage
+                |> Service
+                |> dispatch
+            let connection = 
+                MyConnectionBuilder()
+                    .withUrl("http://localhost:7071/api")
+                    .configureLogging(LogLevel.Information)
+                    .build()
+            do connection.on("newMessage", onHubMessage)
+            do Promise.iter 
+                dispatchConnected 
+                (connection.start()) 
+                |> ignore
+        Cmd.ofSub sub

@@ -6,6 +6,6 @@ type ChatMessage = {
 }
 type Model = {
     Connected : bool
-    Messages : ChatMessage list
+    ReceivedMessages : ChatMessage list
     Counter : int
 }
