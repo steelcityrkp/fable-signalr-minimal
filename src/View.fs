@@ -57,7 +57,7 @@ let view (model:Model) dispatch =
             [ str "Fable-Elmish SignalR Serverless Chat" ]
         hr  []
         div [ Class "row" ] 
-            [ connectionDisplay model.Connected dispatch ]
+            [ connectionDisplay model.Connection.Connected dispatch ]
         div [ Class "row" ] 
             [ counterDisplay model.Counter dispatch ]
         div [ Class "row" ] 

@@ -1,6 +1,17 @@
 module State
 open Model
 
+type InitialModelArguments = {
+  HubConnectionURI : string
+}
+let init (args:InitialModelArguments) : Model = {
+    Connection = {
+      ConnectionURI = args.HubConnectionURI
+      Connected = false }
+    ReceivedMessages = List.empty
+    Counter = 0
+}
+
 type ServiceRemoteMsg =
 | Connected
 | RemoteChatMessage of ChatMessage
@@ -11,11 +22,6 @@ type Msg =
 | Client of ClientBehaviorMsg
 | Service of ServiceRemoteMsg
 
-let init() : Model = {
-    Connected = false
-    ReceivedMessages = List.empty
-    Counter = 0
-}
 let update (msg:Msg) (model:Model) =
     match msg with
     | Client cmsg ->
@@ -25,4 +31,4 @@ let update (msg:Msg) (model:Model) =
     | Service smsg ->
       match smsg with
       | RemoteChatMessage rcm -> { model with ReceivedMessages = rcm :: model.ReceivedMessages }
-      | Connected -> {model with Connected = true}
+      | Connected -> {model with Connection = {model.Connection with Connected = true}}
