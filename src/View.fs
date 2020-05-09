@@ -33,21 +33,6 @@ let counterDisplay counter dispatch =
                   OnClick (fun _ -> dispatch (Decrement |> Client)) ]
                 [ str "-" ] ] ]
 
-let test counter dispatch =
-  div [ Class "btn-group"
-        Role "group" ]
-      [ button  
-          [ Type "button"
-            Class "btn btn-secondary"
-            OnClick (fun _ -> dispatch (Increment |> Client)) ]
-          [ str "+" ]
-        button  
-          [ Type "button"
-            Class "btn btn-secondary"
-            OnClick (fun _ -> dispatch (Decrement |> Client)) ]
-          [ str "-" ] ]
-
-
 let chatMessageDisplay message dispatch =
   div [ Class "col-sm" ]
       [ hr  []
