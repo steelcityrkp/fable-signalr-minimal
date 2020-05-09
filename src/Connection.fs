@@ -40,7 +40,7 @@ module Subscription =
                 |> dispatch
             let connection = 
                 MyConnectionBuilder()
-                    .withUrl("http://localhost:7071/api")
+                    .withUrl(initial.Connection.ConnectionURI)
                     .configureLogging(LogLevel.Information)
                     .build()
             do connection.on("newMessage", onHubMessage)
