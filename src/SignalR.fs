@@ -15,27 +15,6 @@ type LogLevel =
 | Critical = 5
 | None = 6
 
-type [<AllowNullLiteral>]  IHubConnection =
-    abstract start : unit -> JS.Promise<unit>
-    abstract on : methodName:string -> newMethod:('a -> unit) -> unit
-
-type [<AllowNullLiteral>]  IHubConnectionBuilder =
-    abstract withUrl : string -> IHubConnectionBuilder
-    abstract configureLogging : LogLevel -> IHubConnectionBuilder
-    abstract build : unit -> IHubConnection
-
-type ISignalR =
-    abstract HubConnection : IHubConnection
-
-type HubConnection =
-    abstract start : unit -> JS.Promise<unit>
-    abstract on : methodName:string -> newMethod:('a -> unit) -> unit
-
-//let hubconnect : IHubConnection = importDefault "HubConnection"
-
-//  [<Import("*","@microsoft/signalr")>]
-//  let clientLib: ISignalR = jsNative
-
 type IConnection =
     abstract start : unit -> JS.Promise<unit>
     abstract on : methodName:string * newMethod:(obj -> unit) -> unit
@@ -47,9 +26,4 @@ type IConnectionBuilder =
 
 [<ImportDefault("@microsoft/signalr")>]
 [<Emit("new signalR.HubConnectionBuilder()")>]
-let MyConnectionBuilder() : IConnectionBuilder = jsNative
-
-
-
-
-    
+let MyConnectionBuilder() : IConnectionBuilder = jsNative    
