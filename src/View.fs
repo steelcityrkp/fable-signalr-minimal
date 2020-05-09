@@ -6,7 +6,8 @@ open State
 
 let connectionDisplay connected dispatch = 
   div [ Class "col-sm" ] 
-      [ match connected with
+      [ hr  []
+        match connected with
         | false ->
           p [] 
             [ str "Not Connected" ]
@@ -16,12 +17,13 @@ let connectionDisplay connected dispatch =
 
 let counterDisplay counter dispatch =
   div [ Class "col-sm" ] 
-      [ div [ Class "btn-group"
+      [ hr  []
+        div [ Class "btn-group"
               Role "group" ]
             [ button  
                 [ Type "button"
                   Class "btn btn-secondary"
-                  OnClick (fun _ -> dispatch (Increment |> Client)) ]
+                  OnClick (fun _ -> dispatch (Increment |> Local |> Client)) ]
                 [ str "+" ]
               button  
                 [ Type "button"
@@ -30,8 +32,20 @@ let counterDisplay counter dispatch =
               button  
                 [ Type "button"
                   Class "btn btn-secondary"
-                  OnClick (fun _ -> dispatch (Decrement |> Client)) ]
+                  OnClick (fun _ -> dispatch (Decrement |> Local |> Client)) ]
                 [ str "-" ] ] ]
+
+let chatInputFormDisplay dispatch = 
+  div [ Class "col-sm" ]
+      [ hr [ ]
+        form 
+          []
+          [ input 
+              [ Type "text"
+                Id "message-box"
+                Placeholder "Type message here..."
+                AutoComplete "off"
+                Class "form-control" ] ] ]
 
 let chatMessageDisplay message dispatch =
   div [ Class "col-sm" ]
@@ -54,11 +68,12 @@ let chatDisplay messages dispatch =
 let view (model:Model) dispatch =
   div [ Class "container" ]
       [ h3  []
-            [ str "Fable-Elmish SignalR Serverless Chat" ]
-        hr  []
-        div [ Class "row" ] 
+            [ str "Fable-Elmish SignalR Serverless Chat" ]        
+        div [ Class "row" ]
             [ connectionDisplay model.Connection.Connected dispatch ]
         div [ Class "row" ] 
             [ counterDisplay model.Counter dispatch ]
+        div [ Class "row" ] 
+            [ chatInputFormDisplay dispatch ]
         div [ Class "row" ] 
             [ chatDisplay model.ReceivedMessages dispatch ] ]

@@ -30,12 +30,14 @@ module Subscription =
         let sub dispatch =
             let dispatchConnected () = 
                 Connected 
-                |> Service 
+                |> Session
+                |> Service
                 |> dispatch
             ///Handles Push Messages from the Server and dispatches them as Elmish messages.
             let onHubMessage (msg:obj) =
                 msg :?> ChatMessage
-                |> RemoteChatMessage
+                |> ReceivedChatMessage
+                |> Push
                 |> Service
                 |> dispatch
             let connection = 
