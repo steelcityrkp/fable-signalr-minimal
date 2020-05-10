@@ -3,10 +3,12 @@ module State
 open Model
 
 type InitialModelArguments = {
+  Sender : string
   HubConnectionURI : string
 }
 let init (args:InitialModelArguments) : Model = {
-    Connection = {
+    Session = {
+      Sender = args.Sender
       ConnectionURI = args.HubConnectionURI
       Connected = false }
     ReceivedMessages = List.empty
@@ -43,7 +45,7 @@ let processServiceRemoteMsg (msg:ServiceRemoteMsg) (model:Model) =
     | Session sMsg ->
       match sMsg with
       | Connected -> 
-        {model with Connection = {model.Connection with Connected = true}}
+        {model with Session = {model.Session with Connected = true}}
     | Push pMsg ->
       match pMsg with
       | ReceivedChatMessage chat -> 

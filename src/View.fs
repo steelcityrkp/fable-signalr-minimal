@@ -1,5 +1,6 @@
 /// Manages functional reactive View Rendering
 module View
+open Fable.Core.JsInterop
 open Fable.React
 open Fable.React.Props
 open Model
@@ -37,10 +38,14 @@ let counterDisplay counter dispatch =
                 [ str "-" ] ] ]
 
 let chatInputFormDisplay dispatch = 
+  let dispatchChatInputForm (ev:Browser.Types.Event) =
+    do ev.preventDefault() //Prevent Default Form Submission Refresh Behavior!
+    !!ev.target?value |> SendChatMessage |> Command |> Client |> dispatch
   div [ Class "col-sm" ]
       [ hr [ ]
         form 
-          []
+          [ 
+            OnSubmit dispatchChatInputForm]
           [ input 
               [ Type "text"
                 Id "message-box"
@@ -71,7 +76,7 @@ let view (model:Model) dispatch =
       [ h3  []
             [ str "Fable-Elmish SignalR Serverless Chat" ]        
         div [ Class "row" ]
-            [ connectionDisplay model.Connection.Connected dispatch ]
+            [ connectionDisplay model.Session.Connected dispatch ]
         div [ Class "row" ] 
             [ counterDisplay model.Counter dispatch ]
         div [ Class "row" ] 

@@ -45,7 +45,7 @@ module Subscription =
                 |> dispatch
             let connection = 
                 MyConnectionBuilder()
-                    .withUrl(initial.Connection.ConnectionURI)
+                    .withUrl(initial.Session.ConnectionURI)
                     .configureLogging(LogLevel.Information)
                     .build()
             do connection.on("newMessage", onHubMessage)

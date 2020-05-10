@@ -1,7 +1,8 @@
 /// Defines the Model at the basis of State updation behavior and View Rendering
 module Model
 
-type HubConnection = {
+type Session = {
+    Sender : string
     ConnectionURI : string
     Connected : bool
 }
@@ -11,7 +12,7 @@ type ChatMessage = {
 }
 
 type Model = {
-    Connection : HubConnection
+    Session : Session
     ReceivedMessages : ChatMessage list
     Counter : int
 }
