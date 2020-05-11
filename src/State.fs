@@ -2,23 +2,22 @@
 module State
 open Model
 
-
 module RemoteCommander = 
   open Fable.Core
-  open Fetch
+  open Thoth.Fetch
+
   let postChat session txt = async {
     let uri = 
       session.ConnectionURI 
       |> sprintf "%s/api/messages"
-    let body = {
+    let data = {
       sender = session.Sender
       text = txt}
-    let props = [ Method HttpMethod.POST
-                  Body (body |> unbox) ]
-    do JS.console.log uri
-    do JS.console.log body
     let! response = 
-      fetch uri props
+      Fetch.post<ChatMessage, obj> 
+        ( url = uri, 
+          data = data, 
+          caseStrategy = Thoth.Json.CaseStrategy.CamelCase )
       |> Async.AwaitPromise 
     return response }
 
