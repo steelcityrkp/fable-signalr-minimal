@@ -37,21 +37,32 @@ let counterDisplay counter dispatch =
                   OnClick (fun _ -> dispatch (Decrement |> Local |> Client)) ]
                 [ str "-" ] ] ]
 
-let chatInputFormDisplay dispatch = 
-  let dispatchChatInputForm (ev:Browser.Types.Event) =
+let chatInputFormDisplay chatInput dispatch = 
+  let dispatchInputValueChange (ev:Browser.Types.Event) = 
+    !!ev.target?value 
+    |> NewChatMessageValueChange 
+    |> Local
+    |> Client
+    |> dispatch
+  let dispatchInputFormSubmission (ev:Browser.Types.Event) =
     do ev.preventDefault() //Prevent Default Form Submission Refresh Behavior!
-    !!ev.target?value |> SendChatMessage |> Command |> Client |> dispatch
+    SendNewChatMessage 
+    |> Command 
+    |> Client 
+    |> dispatch
   div [ Class "col-sm" ]
       [ hr [ ]
         form 
           [ 
-            OnSubmit dispatchChatInputForm]
+            OnSubmit dispatchInputFormSubmission]
           [ input 
               [ Type "text"
                 Id "message-box"
                 Placeholder "Type message here..."
                 AutoComplete "off"
-                Class "form-control" ] ] ]
+                Class "form-control"
+                Value chatInput
+                OnChange dispatchInputValueChange ] ] ]
 
 let chatMessageDisplay message dispatch =
   div [ Class "col-sm" ]
@@ -67,7 +78,7 @@ let chatMessageDisplay message dispatch =
                     div []
                         [ str message.text ] ] ] ]
 
-let chatDisplay messages dispatch = 
+let chatReceivedMessagesDisplay messages dispatch = 
   div [] 
       [ for chat in messages -> chatMessageDisplay chat dispatch ]
 
@@ -78,8 +89,8 @@ let view (model:Model) dispatch =
         div [ Class "row" ]
             [ connectionDisplay model.Session.Connected dispatch ]
         div [ Class "row" ] 
-            [ counterDisplay model.Counter dispatch ]
+            [ counterDisplay model.Display.Counter dispatch ]
         div [ Class "row" ] 
-            [ chatInputFormDisplay dispatch ]
+            [ chatInputFormDisplay model.Input.NewChatMessage dispatch ]
         div [ Class "row" ] 
-            [ chatDisplay model.ReceivedMessages dispatch ] ]
+            [ chatReceivedMessagesDisplay model.Display.ReceivedMessages dispatch ] ]

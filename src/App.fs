@@ -6,7 +6,7 @@ open Connection
 open View
 let args = {
     Sender = "Jah"
-    HubConnectionURI = "http://localhost:7071/api"}
+    HubConnectionURI = "http://localhost:7071"}
 Program.mkSimple init update view
 |> Program.withReactSynchronous "elmish-app"
 |> Program.withSubscription Subscription.hubConnection

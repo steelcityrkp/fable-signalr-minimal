@@ -43,9 +43,12 @@ module Subscription =
                 |> Push
                 |> Service
                 |> dispatch
-            let connection = 
+            let connection =
+                let uri = 
+                  initial.Session.ConnectionURI 
+                  |> sprintf "%s/api"
                 MyConnectionBuilder()
-                    .withUrl(initial.Session.ConnectionURI)
+                    .withUrl(uri)
                     .configureLogging(LogLevel.Information)
                     .build()
             do connection.on("newMessage", onHubMessage)
