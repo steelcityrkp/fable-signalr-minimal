@@ -4,11 +4,15 @@ open Elmish.React
 open State
 open Connection
 open View
-let args = {
-    Sender = "Jah"
+let initArgs = {
+    Sender = "Chairman Meow"
     HubConnectionURI = "http://localhost:7071"}
-Program.mkSimple init update view
-|> Program.withReactSynchronous "elmish-app"
-|> Program.withSubscription Subscription.hubConnection
-|> Program.withConsoleTrace
-|> Program.runWith args
+
+let startApplication args = 
+    Program.mkSimple init update view
+    |> Program.withReactSynchronous "elmish-app"
+    |> Program.withSubscription Subscription.hubConnection
+    |> Program.withConsoleTrace
+    |> Program.runWith args
+
+do startApplication initArgs
