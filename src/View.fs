@@ -7,19 +7,23 @@ open Model
 open State
 
 let connectionDisplay connected dispatch = 
-  div [ Class "col-sm" ] 
+  div [ Class "col-sm" ]
       [ hr  []
+        p   []
+            [str "SignalR Hub Connection Status"]
         match connected with
         | false ->
-          p [] 
+          div [Class "alert alert-warning"]
             [ str "Not Connected" ]
         | true -> 
-          p [] 
+          div [Class "alert alert-success"]
             [ str "Connected" ] ]
 
 let counterDisplay counter dispatch =
   div [ Class "col-sm" ] 
       [ hr  []
+        p   []
+            [str "Local Counter - Classic Elmish Messaging Example"]
         div [ Class "btn-group"
               Role "group" ]
             [ button  
@@ -51,18 +55,20 @@ let chatInputFormDisplay chatInput dispatch =
     |> Client 
     |> dispatch
   div [ Class "col-sm" ]
-      [ hr [ ]
+      [ hr  [ ]
+        p   []
+            [str "New Chat Message Input"]
         form 
-          [ 
-            OnSubmit dispatchInputFormSubmission]
-          [ input 
-              [ Type "text"
-                Id "message-box"
-                Placeholder "Type message here..."
-                AutoComplete "off"
-                Class "form-control"
-                Value chatInput
-                OnChange dispatchInputValueChange ] ] ]
+            [ 
+              OnSubmit dispatchInputFormSubmission]
+            [ input 
+                [ Type "text"
+                  Id "message-box"
+                  Placeholder "Type message here..."
+                  AutoComplete "off"
+                  Class "form-control"
+                  Value chatInput
+                  OnChange dispatchInputValueChange ] ] ]
 
 let chatMessageDisplay message dispatch =
   div [ Class "col-sm" ]
@@ -84,8 +90,13 @@ let chatReceivedMessagesDisplay messages dispatch =
 
 let view (model:Model) dispatch =
   div [ Class "container" ]
-      [ h3  []
-            [ str "Fable-Elmish SignalR Serverless Chat" ]        
+      [ br  []
+        h3  []
+            [ img [ Src "fable.png" 
+                    HTMLAttr.Width "50px" ]
+              img [ Src "functions.png"
+                    HTMLAttr.Width "50px" ]  
+              str "Fable-Elmish SignalR Serverless Chat" ]        
         div [ Class "row" ]
             [ connectionDisplay model.Session.Connected dispatch ]
         div [ Class "row" ] 

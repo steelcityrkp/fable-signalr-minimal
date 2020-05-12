@@ -4,9 +4,13 @@ open Elmish.React
 open State
 open Connection
 open View
-let initArgs = {
-    Sender = "Chairman Meow"
-    HubConnectionURI = "http://localhost:7071"}
+
+
+
+// Pulls from the Local Storage Values set in Browser prior to the App Initialization
+let initialArgs = {
+    Sender = Browser.Dom.window.localStorage.getItem("Sender")
+    HubConnectionURI = Browser.Dom.window.localStorage.getItem("ServiceURI")}
 
 let startApplication args = 
     Program.mkSimple init update view
@@ -15,4 +19,4 @@ let startApplication args =
     |> Program.withConsoleTrace
     |> Program.runWith args
 
-do startApplication initArgs
+do startApplication initialArgs
